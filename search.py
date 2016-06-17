@@ -1,6 +1,10 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
+import requests
+import bs4
+import sys
+
 BASE_URLS = ['https://torrentz.eu/search?f=',
              'https://torrentz.eu/searchA?f=']
 
@@ -11,9 +15,6 @@ LOG_FILE = 'search_log.txt'
 SEARCH_LIST = ['ubuntu',
                'elementary os']
 
-
-import requests, bs4, sys
-
 # Default to SEARCH_LIST if no search term provided
 if len(sys.argv) > 1:
     search_list = sys.argv[1:]
@@ -22,11 +23,12 @@ else:
 
 # Read in the results already processed from the log file
 try:
-	with open(LOG_FILE, 'r') as f:
-		old_results = f.read().split('\n')
+    with open(LOG_FILE, 'r') as f:
+        old_results = f.read().split('\n')
 except:
-	print('No old results found...\n')
-	old_results = []
+    print('No old results found...\n')
+    old_results = []
+
 
 def search(name):
     results = []
@@ -40,12 +42,13 @@ def search(name):
             results.append(elem)
     return results
 
+
 f = open(LOG_FILE, 'a')
 
 for name in search_list:
     results = search(name)
-    results = set(results) - set(old_results) # exclude old results
-    f.write('\n'.join(results) + '\n') # write new results to log
+    results = set(results) - set(old_results)  # exclude old results
+    f.write('\n'.join(results) + '\n')  # write new results to log
     print("-----------------------------------------")
     print('New results for ' + name.upper())
     print("-----------------------------------------")
